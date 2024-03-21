@@ -158,8 +158,9 @@ ts = np.linspace(sol.t_min, sol.t_max, 200)
 
 x_opt, info, *_ = fsolve(f_nl, x0=np.array([Px, Py, Pv, Ptheta]), args=(x_needed, rho), xtol=1e-2, full_output=True)
 
-print(x_opt)
-print(f_nl(x_opt, x_needed, rho))
+print(f'Оптимальный вектор сопряженных переменных {x_opt=}')
+print(info)
+
 
 state_opt = [x0, y0, v0, theta0, *x_opt]
 
@@ -173,6 +174,7 @@ sol_opt = solve_ivp(bal_rs.external_bal_rs,
 
 sol_opt = sol_opt.sol
 ts_opt = np.linspace(sol_opt.t_min, sol_opt.t_max, 200)
+print(f'Отклонение от требуемой дальности {sol_opt(ts_opt)[0, -1] - x_needed:.0f}')
 
 upr = bal_rs.get_i(sol_opt(ts_opt)[6], sol_opt(ts_opt)[2], sol_opt(ts_opt)[1])
 
