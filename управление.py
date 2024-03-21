@@ -156,7 +156,7 @@ sol = sol.sol
 
 ts = np.linspace(sol.t_min, sol.t_max, 200)
 
-x_opt, info, *_ = fsolve(f_nl, x0=np.array([Px, Py, Pv, Ptheta]), args=(x_needed, rho), xtol=1e-5, full_output=True)
+x_opt, info, *_ = fsolve(f_nl, x0=np.array([Px, Py, Pv, Ptheta]), args=(x_needed, rho), xtol=1e-2, full_output=True)
 
 print(x_opt)
 print(f_nl(x_opt, x_needed, rho))
@@ -174,12 +174,22 @@ sol_opt = solve_ivp(bal_rs.external_bal_rs,
 sol_opt = sol_opt.sol
 ts_opt = np.linspace(sol_opt.t_min, sol_opt.t_max, 200)
 
+upr = bal_rs.get_i(sol_opt(ts_opt)[6], sol_opt(ts_opt)[2], sol_opt(ts_opt)[1])
+
 fig, ax = plt.subplots()
 
 ax.plot(sol(ts)[0], sol(ts)[1], label='Исходная траектория')
 ax.plot(sol_opt(ts_opt)[0], sol_opt(ts_opt)[1], label='Траектория с управлением')
 ax.set_xlabel('Дальность, м')
 ax.set_ylabel('Высота, м')
+ax.legend()
+plt.show()
+
+fig, ax = plt.subplots()
+
+ax.plot(ts_opt, upr, label='Управление (Коэффициент ухудшения аэродинамики')
+ax.set_xlabel('Время, с')
+ax.set_ylabel('Управление, -')
 ax.legend()
 plt.show()
 
